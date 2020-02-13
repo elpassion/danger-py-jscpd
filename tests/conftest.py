@@ -23,7 +23,7 @@ def deleted_files() -> List[str]:
 
 @pytest.fixture
 def danger_json(
-        modified_files: List[str], created_files: List[str], deleted_files: List[str]
+    modified_files: List[str], created_files: List[str], deleted_files: List[str]
 ) -> Dict[str, Any]:
     return {
         "git": {
