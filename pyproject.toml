@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "danger-py-jscpd"
+version = "0.1.0"
+description = "danger-python plugin for detecting copy/paste"
+authors = ["Mateusz Szklarek <mateusz.szklarek@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.3.5"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
