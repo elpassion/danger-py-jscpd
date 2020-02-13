@@ -1,4 +1,3 @@
-import pytest
 from danger_python.danger import Danger, Violation
 
 from danger_py_jscpd import DangerJSCPD
