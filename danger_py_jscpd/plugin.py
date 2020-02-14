@@ -4,21 +4,24 @@ from danger_python.plugins import DangerPlugin
 
 from danger_py_jscpd.report_parser import ReportParser, Duplication
 from typing import List, Optional
+import os
 
 
 class DangerJSCPD(DangerPlugin):
-    def jscpd(self, paths: Optional[List[str]] = None):
+    def jscpd(self, paths: Optional[List[str]] = None, report_path: Optional[str] = None):
         paths = paths if paths else ["."]
+        report_path = report_path if report_path else "/report"
         result = subprocess.run(["which", "jscpd"], capture_output=True, text=True)
         if result.returncode == 1:
             self.fail("Could not find jscpd in current directory, pleas run command `npm install -g jscpd`")
         else:
-            self.run_jspcd(paths=paths)
+            self.__run_jspcd(paths, report_path)
 
-    def run_jspcd(self, paths: List[str]):
+    def __run_jspcd(self, paths: List[str], report_path: str):
         subprocess.run(["jscpd"] + paths, capture_output=True, text=True)
         try:
-            with open("/report/jscpd-report.json") as report:
+            report_file_path = os.path.join(report_path, "jscpd-report.json")
+            with open(report_file_path) as report:
                 parser = ReportParser()
                 duplications = parser.parse(report.read())
                 touched_files = set(self.danger.git.modified_files + self.danger.git.created_files)
@@ -26,7 +29,7 @@ class DangerJSCPD(DangerPlugin):
                     filter(lambda d: d.first_file.path in touched_files or d.second_file.path in touched_files,
                            duplications))
                 if duplications:
-                    formatted_duplications = "\n".join(map(self.format_duplication, duplications))
+                    formatted_duplications = "\n".join(map(self.__format_duplication, duplications))
                     markdown_message = (
                         f"### JSCPD found {len(duplications)} clone(s)\n"
                         "| First | Second | - |\n"
@@ -37,7 +40,7 @@ class DangerJSCPD(DangerPlugin):
         except OSError:
             self.fail("Could not find jscpd-report.json in /report directory")
 
-    def format_duplication(self, duplication: Duplication) -> str:
+    def __format_duplication(self, duplication: Duplication) -> str:
         first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"
         second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end}"
         third = ":warning: |"
