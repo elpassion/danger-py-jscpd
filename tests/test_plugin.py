@@ -111,3 +111,25 @@ def test_plugin_allows_to_customize_paths(danger: Danger):
     )
 
     assert danger.results.markdowns == [Violation(message=expected_markdown)]
+
+
+@pytest.mark.parametrize("modified_files", [["tests/test_model_pickling.py"]])
+def test_plugin_allows_to_define_custom_report_path(danger: Danger):
+    with patch("subprocess.Popen", new_callable=MockPopen) as popen:
+        popen.set_command("which jscpd", returncode=0)
+        popen.set_command("jscpd . -o custom/nested/", returncode=0)
+
+        with open("tests/fixtures/jscpd-report.json") as report:
+            with Patcher() as patcher:
+                patcher.fs.create_file("custom/nested/jscpd-report.json", contents=report.read())
+                plugin = DangerJSCPD()
+                plugin.jscpd(report_path="custom/nested/")
+
+    expected_markdown = (
+        "### JSCPD found 1 clone(s)\n"
+        "| First | Second | - |\n"
+        "| ------------- | -------- | --- |\n"
+        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 | :warning: |"
+    )
+
+    assert danger.results.markdowns == [Violation(message=expected_markdown)]
