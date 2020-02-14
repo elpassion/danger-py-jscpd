@@ -20,7 +20,7 @@ def test_plugin_does_fail_when_jscpd_not_installed(danger: Danger):
         plugin = DangerJSCPD()
         plugin.jscpd()
 
-    message = "Could not find jscpd in current directory, pleas run command `npm install -g jscpd`"
+    message = "Could not find jscpd in current directory, please run command `npm install -g jscpd`"
     assert danger.results.fails == [Violation(message=message)]
 
 

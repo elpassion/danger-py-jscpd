@@ -12,7 +12,7 @@ class DangerJSCPD(DangerPlugin):
         paths = paths if paths else ["."]
         result = subprocess.run(["which", "jscpd"], capture_output=True, text=True)
         if result.returncode == 1:
-            self.fail("Could not find jscpd in current directory, pleas run command `npm install -g jscpd`")
+            self.fail("Could not find jscpd in current directory, please run command `npm install -g jscpd`")
         else:
             self.__run_jspcd(paths, report_path)
 
