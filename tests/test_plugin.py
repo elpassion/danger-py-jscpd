@@ -23,19 +23,6 @@ def test_plugin_does_fail_when_jscpd_not_installed(danger: Danger):
     assert danger.results.fails == [Violation(message=message)]
 
 
-def test_plugin_does_pass_when_jscpd_installed(danger: Danger):
-    with patch("subprocess.Popen", new_callable=MockPopen) as popen:
-        popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd .", returncode=0)
-
-        with Patcher() as patcher:
-            patcher.fs.create_file("/report/jscpd-report.json", contents="")
-            plugin = DangerJSCPD()
-            plugin.jscpd()
-
-    assert not danger.results.fails
-
-
 def test_plugin_could_not_find_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
@@ -61,3 +48,47 @@ def test_plugin_founds_jscpd_report(danger: Danger):
                 plugin.jscpd()
 
     assert not danger.results.fails
+
+
+def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Danger):
+    with patch("subprocess.Popen", new_callable=MockPopen) as popen:
+        popen.set_command("which jscpd", returncode=0)
+        popen.set_command("jscpd .", returncode=0)
+
+        with open("tests/fixtures/jscpd-report-empty.json") as report:
+            with Patcher() as patcher:
+                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                plugin = DangerJSCPD()
+                plugin.jscpd()
+
+    assert not danger.results.fails
+    assert not danger.results.markdowns
+
+
+def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: Danger):
+    with patch("subprocess.Popen", new_callable=MockPopen) as popen:
+        popen.set_command("which jscpd", returncode=0)
+        popen.set_command("jscpd .", returncode=0)
+
+        with open("tests/fixtures/jscpd-report.json") as report:
+            with Patcher() as patcher:
+                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                plugin = DangerJSCPD()
+                plugin.jscpd()
+
+    expected_markdown = (
+        "### JSCPD found 9 clone(s)\n"
+        "| First | Second | - |\n"
+        "| ------------- | -------- | --- |\n"
+        "| examples/babi_rnn.py: 91-123 | examples/babi_memnn.py: 46-79 | :warning: |\n"
+        "| examples/babi_rnn.py: 124-131 | examples/babi_memnn.py: 80-87 | :warning: |\n"
+        "| examples/cifar10_resnet.py: 344-355 | examples/cifar10_resnet.py: 248-259 | :warning: |\n"
+        "| examples/conv_lstm.py: 24-36 | examples/conv_lstm.py: 20-28 | :warning: |\n"
+        "| examples/imdb_cnn.py: 27-38 | examples/imdb_bidirectional_lstm.py: 23-33 | :warning: |\n"
+        "| examples/imdb_cnn_lstm.py: 39-53 | examples/imdb_bidirectional_lstm.py: 23-41 | :warning: |\n"
+        "| examples/variational_autoencoder_deconv.py: 191-205 | examples/variational_autoencoder.py: 161-177 | :warning: |\n"
+        "| tests/test_loss_weighting.py: 99-108 | tests/test_loss_weighting.py: 74-83 | :warning: |\n"
+        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 | :warning: |"
+    )
+
+    assert danger.results.markdowns == [Violation(message=expected_markdown)]

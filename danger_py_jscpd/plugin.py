@@ -2,6 +2,8 @@ import subprocess
 
 from danger_python.plugins import DangerPlugin
 
+from danger_py_jscpd.report_parser import ReportParser, Duplication
+
 
 class DangerJSCPD(DangerPlugin):
     def jscpd(self):
@@ -15,6 +17,23 @@ class DangerJSCPD(DangerPlugin):
         subprocess.run(["jscpd", "."], capture_output=True, text=True)
         try:
             with open("/report/jscpd-report.json") as report:
-                pass
+                parser = ReportParser()
+                duplications = parser.parse(report.read())
+                if duplications:
+                    def format_duplication(duplication: Duplication) -> str:
+                        first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"
+                        second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end}"
+                        third = ":warning: |"
+
+                        return " | ".join([first, second, third])
+
+                    formatted_duplications = "\n".join(map(format_duplication, duplications))
+                    markdown_message = (
+                        f"### JSCPD found {len(duplications)} clone(s)\n"
+                        "| First | Second | - |\n"
+                        "| ------------- | -------- | --- |\n"
+                        f"{formatted_duplications}"
+                    )
+                    self.markdown(markdown_message)
         except OSError:
             self.fail("Could not find jscpd-report.json in /report directory")
