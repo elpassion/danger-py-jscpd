@@ -25,7 +25,7 @@ class DangerJSCPD(DangerPlugin):
         command = ["jscpd"] + paths + reporter_parameter + output_parameter
         subprocess.run(command, capture_output=True, text=True)
         try:
-            report_path = report_path if report_path else "/report"
+            report_path = report_path if report_path else "report"
             report_file_path = os.path.join(report_path, "jscpd-report.json")
             with open(report_file_path) as report:
                 parser = ReportParser()
@@ -44,7 +44,7 @@ class DangerJSCPD(DangerPlugin):
                     )
                     self.markdown(markdown_message)
         except OSError:
-            self.fail("Could not find jscpd-report.json in /report directory")
+            self.fail("Could not find jscpd-report.json in report directory")
 
     def __format_duplication(self, duplication: Duplication) -> str:
         first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"

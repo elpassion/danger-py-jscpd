@@ -33,7 +33,7 @@ def test_plugin_could_not_find_jscpd_report(danger: Danger):
             plugin = DangerJSCPD()
             plugin.jscpd()
 
-    message = "Could not find jscpd-report.json in /report directory"
+    message = "Could not find jscpd-report.json in report directory"
     assert danger.results.fails == [Violation(message=message)]
 
 
@@ -44,7 +44,7 @@ def test_plugin_founds_jscpd_report(danger: Danger):
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
@@ -58,7 +58,7 @@ def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Dang
 
         with open("tests/fixtures/jscpd-report-empty.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
@@ -75,7 +75,7 @@ def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: 
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
@@ -99,7 +99,7 @@ def test_plugin_allows_to_customize_paths(danger: Danger):
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd(paths=["tests", "hello_world"])
 
