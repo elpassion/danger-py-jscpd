@@ -1,6 +1,14 @@
 from danger_py_jscpd.report_parser import ReportParser, Duplication, File
 
 
+def test_parser_returns_0_duplications_for_empty_report():
+    with open("tests/fixtures/jscpd-report-empty.json") as report:
+        parser = ReportParser()
+        duplications = parser.parse(report.read())
+
+    assert len(duplications) == 0
+
+
 def test_parser_returns_9_duplications_for_python_format():
     with open("tests/fixtures/jscpd-report.json") as report:
         parser = ReportParser()
