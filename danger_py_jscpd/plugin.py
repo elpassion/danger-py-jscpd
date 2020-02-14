@@ -17,11 +17,12 @@ class DangerJSCPD(DangerPlugin):
             self.__run_jspcd(paths, report_path)
 
     def __run_jspcd(self, paths: List[str], report_path: Optional[str]):
+        reporter_parameter = ["-r", "json"]
         output_parameter = []
         if report_path:
             output_parameter.extend(["-o", report_path])
 
-        command = ["jscpd"] + paths + output_parameter
+        command = ["jscpd"] + paths + reporter_parameter + output_parameter
         subprocess.run(command, capture_output=True, text=True)
         try:
             report_path = report_path if report_path else "/report"

@@ -27,7 +27,7 @@ def test_plugin_does_fail_when_jscpd_not_installed(danger: Danger):
 def test_plugin_could_not_find_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd .", returncode=0)
+        popen.set_command("jscpd . -r json", returncode=0)
 
         with Patcher():
             plugin = DangerJSCPD()
@@ -40,7 +40,7 @@ def test_plugin_could_not_find_jscpd_report(danger: Danger):
 def test_plugin_founds_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd .", returncode=0)
+        popen.set_command("jscpd . -r json", returncode=0)
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
@@ -54,7 +54,7 @@ def test_plugin_founds_jscpd_report(danger: Danger):
 def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd .", returncode=0)
+        popen.set_command("jscpd . -r json", returncode=0)
 
         with open("tests/fixtures/jscpd-report-empty.json") as report:
             with Patcher() as patcher:
@@ -71,7 +71,7 @@ def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Dang
 def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd .", returncode=0)
+        popen.set_command("jscpd . -r json", returncode=0)
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
@@ -95,7 +95,7 @@ def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: 
 def test_plugin_allows_to_customize_paths(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd tests hello_world", returncode=0)
+        popen.set_command("jscpd tests hello_world -r json", returncode=0)
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
@@ -117,7 +117,7 @@ def test_plugin_allows_to_customize_paths(danger: Danger):
 def test_plugin_allows_to_define_custom_report_path(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
-        popen.set_command("jscpd . -o custom/nested/", returncode=0)
+        popen.set_command("jscpd . -r json -o custom/nested/", returncode=0)
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
