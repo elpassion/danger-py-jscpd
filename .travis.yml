@@ -15,4 +15,5 @@ after_script:
     - nvm install 10.16.0
     - nvm use 10.16.0
     - yarn global add danger
+    - yarn global add jscpd
     - poetry run danger-python ci

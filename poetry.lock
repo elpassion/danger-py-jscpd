@@ -284,8 +284,12 @@ description = "pyfakefs implements a fake file system that mocks the Python file
 name = "pyfakefs"
 optional = false
 python-versions = "*"
-version = "3.7.1"
+version = "4.0"
 
+[package.source]
+reference = "025f06cc56e5ab995d0ca2276e5b2325991e5cf4"
+type = "git"
+url = "https://github.com/jmcgeheeiv/pyfakefs"
 [[package]]
 category = "dev"
 description = "passive checker of Python programs"
@@ -446,7 +450,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "3e3abd3aaa06d02bdefab1fce9bd644c1f2a8b2c5e4df3f3e75e82d5248f4f76"
+content-hash = "a70d28f834178cdb1f83a392e755a2ab354bddd4deefa1a7eb3b461ad3ce5c23"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -597,10 +601,7 @@ pydantic = [
     {file = "pydantic-1.4-py36.py37.py38-none-any.whl", hash = "sha256:72184c1421103cca128300120f8f1185fb42a9ea73a1c9845b1c53db8c026a7d"},
     {file = "pydantic-1.4.tar.gz", hash = "sha256:f17ec336e64d4583311249fb179528e9a2c27c8a2eaf590ec6ec2c6dece7cb3f"},
 ]
-pyfakefs = [
-    {file = "pyfakefs-3.7.1-py2.py3-none-any.whl", hash = "sha256:52caa73b474d2aed34fc0e5fa6c5b4abdb8b17405c56dc8fee500009af56496c"},
-    {file = "pyfakefs-3.7.1.tar.gz", hash = "sha256:1eb68bb250cc14310a6e33c197cbe2c8d93832b543f534e29b58286712f7e2b2"},
-]
+pyfakefs = []
 pyflakes = [
     {file = "pyflakes-2.1.1-py2.py3-none-any.whl", hash = "sha256:17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0"},
     {file = "pyflakes-2.1.1.tar.gz", hash = "sha256:d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"},

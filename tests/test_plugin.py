@@ -20,7 +20,7 @@ def test_plugin_does_fail_when_jscpd_not_installed(danger: Danger):
         plugin = DangerJSCPD()
         plugin.jscpd()
 
-    message = "Could not find jscpd in current directory, pleas run command `npm install -g jscpd`"
+    message = "Could not find jscpd in current directory, please run command `npm install -g jscpd`"
     assert danger.results.fails == [Violation(message=message)]
 
 
@@ -33,7 +33,7 @@ def test_plugin_could_not_find_jscpd_report(danger: Danger):
             plugin = DangerJSCPD()
             plugin.jscpd()
 
-    message = "Could not find jscpd-report.json in /report directory"
+    message = "Could not find jscpd-report.json in report directory"
     assert danger.results.fails == [Violation(message=message)]
 
 
@@ -44,7 +44,7 @@ def test_plugin_founds_jscpd_report(danger: Danger):
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
@@ -58,7 +58,7 @@ def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Dang
 
         with open("tests/fixtures/jscpd-report-empty.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
@@ -75,17 +75,17 @@ def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: 
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd()
 
     expected_markdown = (
         "### JSCPD found 3 clone(s)\n"
-        "| First | Second | - |\n"
-        "| ------------- | -------- | --- |\n"
-        "| examples/babi_rnn.py: 91-123 | examples/babi_memnn.py: 46-79 | :warning: |\n"
-        "| examples/babi_rnn.py: 124-131 | examples/babi_memnn.py: 80-87 | :warning: |\n"
-        "| examples/cifar10_resnet.py: 344-355 | examples/cifar10_resnet.py: 248-259 | :warning: |"
+        "| First | Second |\n"
+        "| ----- | ------ |\n"
+        "| examples/babi_rnn.py: 91-123 | examples/babi_memnn.py: 46-79 |\n"
+        "| examples/babi_rnn.py: 124-131 | examples/babi_memnn.py: 80-87 |\n"
+        "| examples/cifar10_resnet.py: 344-355 | examples/cifar10_resnet.py: 248-259 |"
     )
 
     assert danger.results.markdowns == [Violation(message=expected_markdown)]
@@ -99,15 +99,15 @@ def test_plugin_allows_to_customize_paths(danger: Danger):
 
         with open("tests/fixtures/jscpd-report.json") as report:
             with Patcher() as patcher:
-                patcher.fs.create_file("/report/jscpd-report.json", contents=report.read())
+                patcher.fs.create_file("report/jscpd-report.json", contents=report.read())
                 plugin = DangerJSCPD()
                 plugin.jscpd(paths=["tests", "hello_world"])
 
     expected_markdown = (
         "### JSCPD found 1 clone(s)\n"
-        "| First | Second | - |\n"
-        "| ------------- | -------- | --- |\n"
-        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 | :warning: |"
+        "| First | Second |\n"
+        "| ----- | ------ |\n"
+        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 |"
     )
 
     assert danger.results.markdowns == [Violation(message=expected_markdown)]
@@ -127,9 +127,9 @@ def test_plugin_allows_to_define_custom_report_path(danger: Danger):
 
     expected_markdown = (
         "### JSCPD found 1 clone(s)\n"
-        "| First | Second | - |\n"
-        "| ------------- | -------- | --- |\n"
-        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 | :warning: |"
+        "| First | Second |\n"
+        "| ----- | ------ |\n"
+        "| tests/test_model_pickling.py: 87-95 | tests/test_model_pickling.py: 61-71 |"
     )
 
     assert danger.results.markdowns == [Violation(message=expected_markdown)]
