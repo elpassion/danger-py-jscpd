@@ -1,3 +1,5 @@
+[![PyPI](https://img.shields.io/pypi/v/danger-py-cov)](https://pypi.org/project/danger-py-jscpd/)
+![Python versions](https://img.shields.io/pypi/pyversions/danger-py-jscpd)
 [![Build Status](https://travis-ci.com/elpassion/danger-py-jscpd.svg?token=nu9zU1tfHq8GJSir3pVq&branch=master)](https://travis-ci.com/elpassion/danger-py-jscpd)
 
 # danger-py-jscpd
@@ -31,7 +33,7 @@ npm install -g jscpd
 # install danger-python
 pip install danger-python
 # install danger-py-jscpd
-pip install git+git@github.com:elpassion/danger-py-jscpd.git
+pip install danger-py-jscpd
 # modify dangerfile.py to include plugin
 danger_py_jscpd.jscpd()
 # run danger-python
