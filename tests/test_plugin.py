@@ -67,7 +67,8 @@ def test_plugin_that_no_fails_and_markdowns_with_empty_jscpd_report(danger: Dang
 
 
 @pytest.mark.parametrize("created_files", [["examples/babi_rnn.py"]])
-@pytest.mark.parametrize("modified_files", [["examples/cifar10_resnet.py"]])
+@pytest.mark.parametrize("modified_files",
+                         [["examples/cifar10_resnet.py", ".github/ISSUE_TEMPLATE/c--cntk-backend-users.md"]])
 def test_plugin_that_generate_warn_and_markdown_with_valid_jscpd_report(danger: Danger):
     with patch("subprocess.Popen", new_callable=MockPopen) as popen:
         popen.set_command("which jscpd", returncode=0)
