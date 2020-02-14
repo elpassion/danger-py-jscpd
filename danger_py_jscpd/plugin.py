@@ -38,8 +38,8 @@ class DangerJSCPD(DangerPlugin):
                     formatted_duplications = "\n".join(map(self.__format_duplication, duplications))
                     markdown_message = (
                         f"### JSCPD found {len(duplications)} clone(s)\n"
-                        "| First | Second | - |\n"
-                        "| ------------- | -------- | --- |\n"
+                        "| First | Second |\n"
+                        "| ----- | ------ |\n"
                         f"{formatted_duplications}"
                     )
                     self.markdown(markdown_message)
@@ -48,7 +48,6 @@ class DangerJSCPD(DangerPlugin):
 
     def __format_duplication(self, duplication: Duplication) -> str:
         first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"
-        second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end}"
-        third = ":warning: |"
+        second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end} |"
 
-        return " | ".join([first, second, third])
+        return " | ".join([first, second])
