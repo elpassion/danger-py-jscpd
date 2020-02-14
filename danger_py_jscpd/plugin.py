@@ -20,14 +20,7 @@ class DangerJSCPD(DangerPlugin):
                 parser = ReportParser()
                 duplications = parser.parse(report.read())
                 if duplications:
-                    def format_duplication(duplication: Duplication) -> str:
-                        first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"
-                        second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end}"
-                        third = ":warning: |"
-
-                        return " | ".join([first, second, third])
-
-                    formatted_duplications = "\n".join(map(format_duplication, duplications))
+                    formatted_duplications = "\n".join(map(self.format_duplication, duplications))
                     markdown_message = (
                         f"### JSCPD found {len(duplications)} clone(s)\n"
                         "| First | Second | - |\n"
@@ -37,3 +30,10 @@ class DangerJSCPD(DangerPlugin):
                     self.markdown(markdown_message)
         except OSError:
             self.fail("Could not find jscpd-report.json in /report directory")
+
+    def format_duplication(duplication: Duplication) -> str:
+        first = f"| {duplication.first_file.path}: {duplication.first_file.start}-{duplication.first_file.end}"
+        second = f"{duplication.second_file.path}: {duplication.second_file.start}-{duplication.second_file.end}"
+        third = ":warning: |"
+
+        return " | ".join([first, second, third])
